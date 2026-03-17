@@ -59,6 +59,15 @@ Overall, our recipes dataset now has 83782 rows and 15 columns. Embedded below i
 | millionaire pound cake               |       120 |                5 |               7 | butter, sugar, eggs     | freheat the oven to...  | time-to-make, course... | why a millionaire po... |
 | 2000 meatloaf                        |        90 |                5 |              13 | meatloaf mixture, un... | pan fry bacon, and s... | time-to-make, course... | ready, set, cook! sp... |
 
+### Univariate Plot
+<iframe
+  src="assets/univariate_plot.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+### Bivariate Plot
 
 ## Assessment of Missingness
 
