@@ -66,7 +66,6 @@ Overall, our recipes dataset now has 83782 rows and 15 columns. Embedded below i
   height="600"
   frameborder="0"
 ></iframe>
-
 For this plot, we examined the distribution of the number of ingredients per recipe in the dataset. As shown above, the plot is roughly bell-shaped with a slight right skew. This indicates that the most common number of ingredients per recipe is 8, while some range all the way up to 37. 
 
 ### Bivariate Plot
@@ -76,8 +75,7 @@ For this plot, we examined the distribution of the number of ingredients per rec
   height="600"
   frameborder="0"
 ></iframe>
-
-“This scatter plot shows how the number of ingredients in a recipe impacts its average rating. Recipes with very few ingredients (<5) appear to have slightly lower ratings, while recipes with a moderate number of ingredients (around 8–10) often have the highest average ratings. In between these two ranges, adding more ingredients does not appear to increase ratings and may even correspond to a slight decrease, forming a roughly quadratic trend.”
+This scatter plot shows how the number of ingredients in a recipe impacts its average rating. Recipes with very few ingredients (<5) appear to have slightly lower ratings, while recipes with a moderate number of ingredients (around 8–10) often have the highest average ratings. In between these two ranges, adding more ingredients does not appear to increase ratings and may even correspond to a slight decrease, forming a roughly quadratic trend.
 
 ### Interesting Aggregates
 put a pivot table!
@@ -86,13 +84,13 @@ put a pivot table!
 As previously mentioned, the columns that contain missing data are `name`, `description`, and `average_rating`. Let's do some exploration to determine why this may be! 
 
 ### MNAR Analysis 
-We believe that the `description` column is MNAR because users are likely to report a rating description when they have strong feelings about the recipe, whether that be positive or negative. However, users are likely not to report a rating explaination when they have mediocre or little thoughts on the recipe. This missingness mechanism could be turned into MAR if we collected additional information, like whether the user viewed or cooked the recipe, and also how frequently users rate recipes. 
+We believe that the `description` column is MNAR because users are likely to report a rating description when they have strong feelings about the recipe, whether that be positive or negative. However, users are likely not to report a rating explanation when they have mediocre or few thoughts on the recipe. This missingness mechanism could be turned into MAR if we collected additional information, like whether the user viewed or cooked the recipe, and also how frequently users rate recipes. 
 
 ### Missingness Dependency
 Next, we chose to explore the missingness mechanism of the `average_rating` column in the recipes dataset. More specifically, we investigated whether the missingness of the `average_rating` column is dependent on the `n_ingredients` column, which keeps track of the number of ingredients, or the `day_submitted` column, which reports which day of the month a review was published. 
 
 > `average_rating` and `n_ingredients`
-> 
+
 **Null Hypothesis:** The missingness of average_rating does not depend on the number of ingredients in the recipe.
 
 **Alternate Hypothesis:** The missingness of average_rating does depend on the number of ingredients in the recipe.
@@ -109,7 +107,7 @@ The **observed statistic** of these two distributions is ~0.254 as shown by the 
 
 
 > `average_rating` and `day_submitted`
-> 
+
 **Null Hypothesis:** The missingness of average_rating does not depend on the day of the month the review was submitted.  
 
 **Alternate Hypothesis:** The missingness of average_rating does depend on the day of the month the review was submitted
@@ -125,6 +123,21 @@ To conduct this permutation test, we shuffled the missingness of `average_rating
 The **observed statistic** of these two distributions is -0.065 as shown by the vertical line in the graph above. The p-value determined from this permutation test is 0.725. As 0.725 > 0.05 (our significance level), we **fail to reject the null hypothesis**, concluding that the missingness of `average_rating` is not dependent on the `day_submitted` column. 
 
 ## Hypothesis Testing
+We've all heard the phrase *"butter makes everything better"* but how much better does butter truly make a recipe? Does it have any effect on the rating of a recipe, or is that phrase just a catchy line we've heard over and over again? Thus, for our hypothesis test, we choose to explore just that. 
+
+**Null Hypothesis:** Recipes that include butter have equal ratings to recipes that do not include butter
+
+**Alternate Hypothesis:** Recipes that include butter **do not** have equal ratings to recipes that do not include butter
+
+**Test Statistic:** The absolute difference in means between the average rating of recipes with butter and without butter 
+
+**Significance Level:** 0.05
+We're using a permutation test as it directly tests whether the difference in average ratings between recipes with and without butter could occur by chance or if there is a likely relationship. Furthermore, we set up our hypotheses so that our null hypothesis assumes no difference between the two groups. We chose the difference in means as our test statistic, as it allows us to measure the relationship between the average rating and the presence of butter in a recipe. Finally, we used a significance level of 0.05 as it is the standard threshold for significance. 
+
+To conduct this permutation test, we split up our recipe data set into 2 groups based on whether butter was in the `ingredients_lst` column or not. From this, we got an **observed value of 0.001**, and after shuffling 1000 times and recording our test statistic, we got a **p-value of 0.854**. 
+
+### Hypothesis Test Conclusion
+As the p-value found 0.854 is greater than our chosen significance level of 0.05, we **fail to reject the null hypothesis**. Thus, we conclude that we have not found enough evidence to confidently say that the difference in average rating of recipes with and without butter is not due to random chance alone. 
 
 ## Framing a Prediction Problem
 
