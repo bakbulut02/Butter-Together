@@ -67,6 +67,8 @@ Overall, our recipes dataset now has 83782 rows and 15 columns. Embedded below i
   frameborder="0"
 ></iframe>
 
+For this plot, we examined the distribution of the number of ingredients per recipe in the dataset. As shown above, the plot is roughly bell-shaped with a slight right skew. This indicates that the most common number of ingredients per recipe is 8, while some range all the way up to 37. 
+
 ### Bivariate Plot
 <iframe
   src="assets/bivariate_plot.html"
@@ -75,7 +77,43 @@ Overall, our recipes dataset now has 83782 rows and 15 columns. Embedded below i
   frameborder="0"
 ></iframe>
 
+“This scatter plot shows how the number of ingredients in a recipe impacts its average rating. Recipes with very few ingredients (<5) appear to have slightly lower ratings, while recipes with a moderate number of ingredients (around 8–10) often have the highest average ratings. In between these two ranges, adding more ingredients does not appear to increase ratings and may even correspond to a slight decrease, forming a roughly quadratic trend.”
+
+### Interesting Aggregates
+put a pivot table!
+
 ## Assessment of Missingness
+As previously mentioned, the columns that contain missing data are `name`, `description`, and `average_rating`. Let's do some exploration to determine why this may be! 
+
+### MNAR Analysis 
+We believe that the `description` column is MNAR because users are likely to report a rating description when they have strong feelings about the recipe, whether that be positive or negative. However, users are likely not to report a rating explaination when they have mediocre or little thoughts on the recipe. This missingness mechanism could be turned into MAR if we collected additional information, like whether the user viewed or cooked the recipe, and also how frequently users rate recipes. 
+
+### Missingness Dependency
+Next, we chose to explore the missingness mechanism of the `average_rating` column in the recipes dataset. More specifically, we investigated whether the missingness of the `average_rating` column is dependent on the `n_ingredients` column, which keeps track of the number of ingredients, or the `day_submitted` column, which reports which day of the month a review was published. 
+
+> `average_rating` and `n_ingredients`
+**Null Hypothesis:** The missingness of average_rating does not depend on the number of ingredients in the recipe.  
+**Alternate Hypothesis:** The missingness of average_rating does depend on the number of ingredients in the recipe.
+**Test Statistic:** The absolute difference in means between `n_ingredients` in the distribution of the group without missing `average_rating` values and the distribution of the group without missing `average_rating` values. 
+**Significance Level:** 0.05
+
+To conduct this permutation test, we shuffled the missingness of `average_rating` 1000 times to collect 1000 mean differences between the two distributions as defined in the test statistic section.
+
+**IMPORT A GRAPH**
+
+The **observed statistic** of these two distributions is ~0.254 as shown by the vertical line in the graph above. The p-value determined from this permutation test is 0.0. As 0.0 < 0.05 (our significance level), we **reject the null hypothesis**, concluding that the missingness of `average_rating` is dependent on the `n_ingredients` column. 
+
+> `average_rating` and `day_submitted`
+**Null Hypothesis:** The missingness of average_rating does not depend on the day of the month the review was submitted.  
+**Alternate Hypothesis:** The missingness of average_rating does depend on the day of the month the review was submitted
+**Test Statistic:** The absolute difference in means between `day_submitted` in the distribution of the group without missing `average_rating` values and the distribution of the group without missing `average_rating` values. 
+**Significance Level:** 0.05
+
+To conduct this permutation test, we shuffled the missingness of `average_rating` 1000 times to collect 1000 mean differences between the two distributions as defined in the test statistic section.
+
+**IMPORT A GRAPH**
+
+The **observed statistic** of these two distributions is -0.065 as shown by the vertical line in the graph above. The p-value determined from this permutation test is 0.725. As 0.725 > 0.05 (our significance level), we **fail to reject the null hypothesis**, concluding that the missingness of `average_rating` is not dependent on the `day_submitted` column. 
 
 ## Hypothesis Testing
 
