@@ -98,7 +98,7 @@ Overall, our recipes dataset now has 83782 rows and 21 columns. Embedded below i
   height="600"
   frameborder="0"
 ></iframe>
-For this plot, we examined the distribution of the number of ingredients per recipe in the dataset. As shown above, the plot is roughly bell-shaped with a slight right skew. This indicates that the most common number of ingredients per recipe is 8, while some range all the way up to 37. 
+For this plot, we examined the distribution of the number of steps per recipe in the dataset. As shown above, the plot is roughly bell-shaped with a slight right skew. This indicates that the most common number of steps per recipe is 7, while some range all the way up to and over 45. 
 
 ### Bivariate Plot
 <iframe
@@ -192,6 +192,13 @@ We've all heard the phrase *"butter makes everything better"* but how much bette
 We're using a permutation test as it directly tests whether the difference in average ratings between recipes with and without butter could occur by chance or if there is a likely relationship. Furthermore, we set up our hypotheses so that our null hypothesis assumes no difference between the two groups. We chose the difference in means as our test statistic, as it allows us to measure the relationship between the average rating and the presence of butter in a recipe. Finally, we used a significance level of 0.05 as it is the standard threshold for significance. 
 
 To conduct this permutation test, we split up our recipe data set into 2 groups based on whether butter was in the `ingredients_lst` column or not. From this, we got an **observed value of 0.001**, and after shuffling 1000 times and recording our test statistic, we got a **p-value of 0.854**. 
+
+<iframe
+  src="assets/hypothesis.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
 
 ### Hypothesis Test Conclusion
 As the p-value found 0.854 is greater than our chosen significance level of 0.05, we **fail to reject the null hypothesis**. Thus, we conclude that we have not found enough evidence to confidently say that the difference in average rating of recipes with and without butter is not due to random chance alone. 
