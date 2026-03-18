@@ -152,18 +152,31 @@ The F1 score of our baseline model was 0.568; we believe this to be a good basel
 ## Final Model
 For our final model, we used our one-hot encoded `ingredients_lst` and `n_tags` from our baseline model and added a one-hot encoded `tags_lst` and the `n_ingr` columns as our features. 
 
-`ingredients_lst`
+`ingredients_lst`:
 We one-hot encoded the most common ingredients to capture whether or not certain popular ingredients are in a given recipe. The presence of certain ingredients can dramatically influence the taste and likability of a recipe. Thus, this feature allows the model to learn which ingredients are generally associated with higher or lower ratings. 
 
-`tags_lst`
+`tags_lst`:
 We one-hot encoded the tags list for a similar reason to why we one-hot encoded the ingredients list. This is because encoding popular tags gives the model important contextual information about each recipe, like the cuisine, dietary category, or time taken to complete. Thus, this feature gives the model insight into user preferences and can explain variation in scores due to factors beyond their ingredients. 
 
-`n_ingr`
+`n_ingr`:
 This feature represents the total number of ingredients in a recipe. This gives the model information on the complexity of the recipe, and helps teach the model whether recipes with more ingredients may be perceived as more flavorful, thus resulting in higher ratings or vice versa. 
 
-`n_tags`
+`n_tags`:
 This feature counts the number of tags associated with a given recipe. This feature helps capture how well or broadly a recipe is described. This can relate to how visible/accessible a recipe is and can provide information on how that may affect its average rating. 
 
 Overall, the features used provide the model with a mixture of specific signals and general patterns to improve its ability to predict `average_rating`. We continued to use RandomForestClassifier as our modeling algorithm and conducted a GridSearchCV in order to tune our hyperparameters. The hyperparameters we chose were max_depth, min_samples_test, min_samples_split, and n_estimators. As decision trees can often overfit and be prone to bias, we chose these hyperparameters to help control and correct these errors. 
 
-Our GridSearchCV returned that the best parameters are max_depth = 20, min_samples_test = 1, min_samples_split = 2, and n_estimators = 200. These tuned parameters resulted in a new F1 score of **0.576**. The lack of increase in F1 score likely points to weaknesses in our dataset rather than the model itself. More specifically, the features available in the `recipe` dataset do not contain enough data or are too noisy to provide meaningful predictions on `average_rating`. 
+Our GridSearchCV returned that the best parameters are max_depth = 20, min_samples_test = 1, min_samples_split = 2, and n_estimators = 200. These tuned parameters resulted in a new F1 score of **0.576**, which is a 0.008 increase. The lack of increase in F1 score likely points to weaknesses in our dataset rather than the model itself. More specifically, the features available in the `recipe` dataset do not contain enough data or are too noisy to provide meaningful predictions on `average_rating`. 
+
+## Fairness Analysis
+For our fairness analysis, we chose our group X to be recipes with fewer than or equal to 5 ingredients and our group Y to be recipes with more than 5 ingredients. Our evaluation metric is the F1 score between the two groups because it takes into account recall and precision, and the goal of this model is to maximize both of these. We also use the F1 score because, since our model is a multi-class classification, precision and recall depend heavily on how you average them; it is more important for our model to find the balance between the two. 
+
+**Null Hypothesis:** The model is fair, and the F1 scores for Group X and Group Y are roughly the same
+
+**Alternate Hypothesis:** The model is not fair; the F1 score for Group X is lower than the F1 score for Group Y 
+
+**Test Statistic**: The difference in means between the two groups' F1 scores.
+
+**Significance Level:** 0.05
+
+To assess fairness, we simply ran a permutation test, splitting our `recipe` dataset into Group X and Group Y, and computed our test statistic 1000 times, shuffling the group assignment column each iteration. We got a p-value of 1, which is above our threshold. Therefore, we **fail to reject the null hypothesis** and conclude that there is not enough information to say that the difference in F1 scores between the 2 groups is not due to chance alone. Also, as the p-value is 1 (very extreme), this indicates that there is very little to zero evidence of unfairness between groups. 
